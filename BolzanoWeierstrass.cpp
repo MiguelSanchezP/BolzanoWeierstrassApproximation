@@ -7,7 +7,8 @@ using namespace std;
 void processar(char* e, int l);
 bool conte (char* a, char c, int l);
 double ele(double b, int e);
-void aproximacio(int iteracions, int decimals);
+void aproximacioSecant(int iteracions, int decimals);
+void aproximacioBolzano(int iteracions, int decimals);
 double evaluar (double x);
 
 char numeros[] = {'0','1','2','3','4','5','6','7','8','9'};
@@ -22,7 +23,8 @@ int main () {
 	cin.getline(expressio, l);
 	processar (expressio, l);
 	cout << "Evaluant una funcio de grau " << grau << endl;
-	aproximacio (100, 50);
+	aproximacioSecant (10, 50);
+	aproximacioBolzano (10, 50);
 //	for (int i = 0; i<100; i++) {
 //		cout << coeficients[i] << " / ";
 //	}
@@ -101,12 +103,17 @@ double ele (double b, int e) {
 	return resultat;
 }
 
-void aproximacio (int iteracions, int decimals) {
+void aproximacioSecant (int iteracions, int decimals) {
+	cout << "\nMetode de la secant" << endl;
+	cout << "-------------------" << endl;
+	cout << "Nombre de iteracions: " << iteracions << endl;
 	double X1 = (double)1;
 	double X2 = (double)-1;
 	double Y1 = evaluar(X1);
 	double Y2 = evaluar(X2);
-	cout << "Valors de Y1 i Y2 " << Y1 << " / " << Y2 << endl;
+	bool perfecte = false;
+	double puntTall;
+//	cout << "Valors de Y1 i Y2 " << Y1 << " / " << Y2 << endl;
 	cout.precision(decimals);
 	while (!((Y2 < 0 && Y1 > 0) || (Y2 > 0 && Y1 < 0))) {
 //		cout << "Acces" << endl;
@@ -120,17 +127,63 @@ void aproximacio (int iteracions, int decimals) {
 		Y2 = evaluar(X2);
 		double pendent = (Y2-Y1)/(X2-X1);
 		double ordenada = Y1-pendent*X1;
-		double puntTall = (ordenada/pendent)*-1;
+		puntTall = (ordenada/pendent)*-1;
 		
-		cout << "Valor compres entre " << fixed << X1 << " i " << X2 << endl;
-		cout << "Valor aproximat: " << puntTall << endl;
-		cout << "Evaluacio amb valor " << fixed << evaluar(puntTall) << endl;
+//		cout << "Valor compres entre " << fixed << X1 << " i " << X2 << endl;
+//		cout << "Valor aproximat: " << puntTall << endl;
+//		cout << "Evaluacio amb valor " << fixed << evaluar(puntTall) << endl;
 		if (evaluar (puntTall) > 0) {
 			X1 = puntTall;
 		}
 		if (evaluar (puntTall < 0)) {
 			X2 = puntTall;
 		}
+		if (evaluar(puntTall) == 0) {
+			perfecte = true;
+		}
+	}
+	if (perfecte) {
+		cout << "La solucio es: " << fixed << puntTall << endl;
+	}else{
+		cout << "S. Evaluacio amb valor: " << fixed << puntTall << endl;
+		cout << "S. Hi ha present un error de: " << fixed << evaluar(puntTall) << endl;
+	}
+}
+
+void aproximacioBolzano (int iteracions, int decimals) {
+	cout << "\nMetode Bolzano-Weierstrass" << endl;
+	cout << "--------------------------" << endl;
+	cout << "Nombre de iteracions: " << iteracions << endl;
+	double X1 = (double)1;
+	double X2 = (double)-1;
+	double Y1 = evaluar(X1);
+	double Y2 = evaluar(X2);
+	cout.precision(decimals);
+	bool perfecte = false;
+	double puntTall;
+	while(!((Y2>0 && Y1<0) || (Y2<0 && Y1>0))) {
+		X1 += 1;
+		X2 -= -1;
+		Y1 = evaluar (X1);
+		Y2 = evaluar(X2);
+	}
+	for (int i = 0; i<iteracions; i++) {
+		puntTall = (double)(X2+X1)/2;
+		if (evaluar(puntTall) > 0) {
+			X1 = puntTall;
+		}
+		if (evaluar(puntTall) < 0) {
+			X2 = puntTall;
+		}
+		if (evaluar(puntTall) == 0) {
+			perfecte = true;
+		} 
+	}
+	if (perfecte) {
+		cout << "BW. La solucio es: " << fixed << puntTall << endl;
+	}else{
+		cout << "BW. Evaluacio amb valor: " << fixed << puntTall << endl;
+		cout << "BW. Hi ha present un error de: " << fixed << evaluar(puntTall) << endl;
 	}
 }
 
