@@ -128,15 +128,19 @@ void aproximacioSecant (int iteracions, int decimals) {
 	bool perfecte = false;
 	double puntTall;
 	cout.precision(decimals);
+	bool parell = true;
 	while (!((Y2 < 0 && Y1 > 0) || (Y2 > 0 && Y1 < 0))) {
-		X1 += 0.1;
-		X2 -= 0.1;
-		Y1 = evaluar (X1);
-		Y2 = evaluar (X2);
-		cout << "no peta!!" << endl;
+		if (parell) {
+			X1 += 0.1;
+			Y1 = evaluar(X1);
+			parell = false;
+		}else{
+			X2 -= 0.1;
+			Y2 = evaluar(X2);
+			parell = true;
+		}
 	}
 	for(int i = 0; i<iteracions; i++) {
-		cout << "no peta" << i << endl;
 		Y1 = evaluar(X1);
 		Y2 = evaluar(X2);
 		double pendent = (Y2-Y1)/(X2-X1);
@@ -159,7 +163,6 @@ void aproximacioSecant (int iteracions, int decimals) {
 		cout << "S. Evaluacio amb valor: " << fixed << puntTall << endl;
 		cout << "S. Hi ha present un error de: " << fixed << evaluar(puntTall) << endl;
 	}
-	cout << "no ha petat" << endl;
 	valSecant = evaluar(puntTall);
 }
 
@@ -167,18 +170,24 @@ void aproximacioBolzano (int iteracions, int decimals) {
 	cout << "\nMetode Bolzano-Weierstrass" << endl;
 	cout << "--------------------------" << endl;
 	cout << "Nombre de iteracions: " << iteracions << endl;
-	double X1 = (double)1;
-	double X2 = (double)-1;
+	double X1 = (double)0.1;
+	double X2 = (double)-0.1;
 	double Y1 = evaluar(X1);
 	double Y2 = evaluar(X2);
 	cout.precision(decimals);
 	bool perfecte = false;
 	double puntTall;
+	bool parell = true;
 	while(!((Y2>0 && Y1<0) || (Y2<0 && Y1>0))) {
-		X1 += 1;
-		X2 -= -1;
-		Y1 = evaluar (X1);
-		Y2 = evaluar(X2);
+		if (parell) {
+			X1 += 0.1;
+			Y1 = evaluar(X1);
+			parell = false;	
+		}else{
+			X2 -= 0.1;
+			Y2 = evaluar(X2);
+			parell = true;
+		}
 	}
 	for (int i = 0; i<iteracions; i++) {
 		puntTall = (double)(X2+X1)/2;
